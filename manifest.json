@@ -1,0 +1,22 @@
+{
+  "name": "Gnoke Library",
+  "short_name": "Gnoke Library",
+  "description": "Offline-first library management for tracking books and loans.",
+  "start_url": "index.html",
+  "scope": "/",
+  "id": "app.gnoke.library",
+  "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay"],
+  "background_color": "#f5f0ea",
+  "theme_color": "#1e160e",
+  "orientation": "portrait",
+  "prefer_related_applications": false,
+  "categories": ["education", "productivity"],
+  "dir": "ltr",
+  "lang": "en",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/maskable.png",  "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Gnoke Library</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/style.css" />
+  <script>
+    // Apply saved theme before paint to avoid flash
+    (function(){
+      if(localStorage.getItem('gnoke_theme')==='dark')
+        document.documentElement.setAttribute('data-theme','dark');
+    })();
+  </script>
+</head>
+<body>
+
+<!-- ── Demo Banner ─────────────────────────────────────────────────────── -->
+<div id="demo-banner" style="display:none;">
+  <span>📚 You're viewing demo data.</span>
+  <button onclick="handleResetDemo()">Clear &amp; Start Fresh</button>
+  <button class="dismiss" onclick="this.closest('#demo-banner').style.display='none'">✕</button>
+</div>
+
+<!-- ── Top Bar ─────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <button class="burger" id="burger-btn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="brand">
+    <span class="brand-gnoke">Gnoke</span>
+    <span class="brand-app">Library</span>
+  </div>
+  <button class="btn-topbar" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+  <button class="btn-topbar" onclick="openSummaryModal()" title="Library Status">📊</button>
+  <button class="btn-topbar mute-btn" id="notif-mute-btn" onclick="Notify.toggleMute()" title="Mute notifications for 24 hours">🔔</button>
+</header>
+
+<!-- ── Nav Overlay (mobile) ────────────────────────────────────────────── -->
+<div id="nav-overlay" class="nav-overlay"></div>
+
+<!-- ── Side Drawer (mobile) / Top Nav (desktop) ────────────────────────── -->
+<nav id="nav-drawer" class="nav-drawer">
+  <div class="nav-header">
+    <span class="brand-gnoke">Gnoke</span>
+    <span class="brand-app">Library</span>
+  </div>
+  <button class="nav-btn" data-page="main-page">
+    <span class="nav-icon">📚</span> Books
+  </button>
+  <button class="nav-btn" data-page="history-page">
+    <span class="nav-icon">📋</span> History
+  </button>
+  <button class="nav-btn" data-page="return-page">
+    <span class="nav-icon">↩️</span> Returns
+  </button>
+  <button class="nav-btn" data-page="config-page">
+    <span class="nav-icon">⚙️</span> Config
+  </button>
+</nav>
+
+<!-- ── Desktop Tab Bar ─────────────────────────────────────────────────── -->
+<div class="tab-bar">
+  <button class="tab-btn" data-page="main-page">📚 Books</button>
+  <button class="tab-btn" data-page="history-page">📋 History</button>
+  <button class="tab-btn" data-page="return-page">↩️ Returns</button>
+  <button class="tab-btn" data-page="config-page">⚙️ Config</button>
+</div>
+
+<!-- ── Page Container ──────────────────────────────────────────────────── -->
+<main class="pages">
+
+  <!-- MAIN: Books -->
+  <section id="main-page" class="page">
+    <div class="page-header">
+      <div>
+        <h1>All Books</h1>
+        <p class="sub">Total titles: <strong id="book-count">0</strong></p>
+      </div>
+      <button class="btn-primary" onclick="loadPage('config-page')">+ Add Book</button>
+    </div>
+    <div class="search-wrap">
+      <input type="text" id="search-books" placeholder="Search title, author, ISBN, category…" />
+    </div>
+    <div class="table-wrap">
+      <table id="books-table">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Author</th>
+            <th>Title</th>
+            <th class="hide-sm">ISBN</th>
+            <th>Category</th>
+            <th class="center">Copies</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- HISTORY: Borrow Records -->
+  <section id="history-page" class="page">
+    <div class="page-header">
+      <div>
+        <h1>History</h1>
+        <p class="sub">All borrow &amp; return records</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="text" id="search-history" placeholder="Search borrower, title, ISBN…" />
+    </div>
+    <div class="table-wrap">
+      <table id="history-table">
+        <thead>
+          <tr>
+            <th>Borrower</th>
+            <th>Book</th>
+            <th class="hide-sm">Date Out</th>
+            <th>Due Date</th>
+            <th class="hide-sm">Returned</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RECORD: Borrow a Book -->
+  <section id="return-page" class="page">
+    <div class="page-header">
+      <div>
+        <h1>Borrow &amp; Return</h1>
+        <p class="sub">Record a loan or process a return</p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+
+      <!-- Borrow card -->
+      <div class="form-card">
+        <h2 class="card-title">📖 Borrow a Book</h2>
+        <form id="borrow-form" autocomplete="off">
+          <label for="borrower-name">Borrower Name <span class="req">*</span></label>
+          <input type="text" id="borrower-name" placeholder="Full name" required />
+
+          <label for="borrow-book-select">Book <span class="req">*</span></label>
+          <select id="borrow-book-select" required>
+            <option value="">Select Book</option>
+          </select>
+
+          <div class="date-row">
+            <div>
+              <label for="borrow-date-out">Date Out <span class="req">*</span></label>
+              <input type="date" id="borrow-date-out" required />
+            </div>
+            <div>
+              <label for="borrow-due-date">Due Date <span class="req">*</span></label>
+              <input type="date" id="borrow-due-date" required />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary w-full">Record Borrow</button>
+        </form>
+      </div>
+
+      <!-- Return card -->
+      <div class="form-card">
+        <h2 class="card-title">↩️ Return a Book</h2>
+        <form id="return-form" autocomplete="off">
+          <label for="return-borrower-select">Borrower <span class="req">*</span></label>
+          <select id="return-borrower-select" required>
+            <option value="">Select Borrower</option>
+          </select>
+
+          <label for="return-book-select">Book <span class="req">*</span></label>
+          <select id="return-book-select" required>
+            <option value="">Select Book</option>
+          </select>
+
+          <label for="return-date">Return Date <span class="req">*</span></label>
+          <input type="date" id="return-date" required />
+
+          <button type="submit" class="btn-primary w-full">Record Return</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONFIG: Add Books, Categories, Backup -->
+  <section id="config-page" class="page">
+    <div class="page-header">
+      <div>
+        <h1>Configuration</h1>
+        <p class="sub">Books, categories &amp; data management</p>
+      </div>
+    </div>
+
+    <div class="config-grid">
+
+      <!-- Add Book -->
+      <div class="form-card">
+        <h2 class="card-title">➕ Add New Book</h2>
+        <form id="add-book-form" autocomplete="off">
+          <label for="add-book-title">Title <span class="req">*</span></label>
+          <input type="text" id="add-book-title" placeholder="Book title" required />
+
+          <label for="add-author">Author <span class="req">*</span></label>
+          <input type="text" id="add-author" placeholder="Author name" required />
+
+          <label for="add-isbn">ISBN</label>
+          <input type="text" id="add-isbn" placeholder="ISBN (optional)" />
+
+          <label for="add-book-category">Category <span class="req">*</span></label>
+          <select id="add-book-category" required>
+            <option value="">Select Category</option>
+          </select>
+
+          <label for="add-copies">Copies</label>
+          <input type="number" id="add-copies" value="1" min="1" />
+
+          <button type="submit" class="btn-primary w-full">Add Book</button>
+        </form>
+      </div>
+
+      <!-- Categories -->
+      <div class="form-card">
+        <h2 class="card-title">🏷️ Categories</h2>
+        <form id="add-category-form" autocomplete="off">
+          <label for="add-category-name">New Category</label>
+          <div class="inline-form">
+            <input type="text" id="add-category-name" placeholder="Category name" />
+            <button type="submit" class="btn-primary">Add</button>
+          </div>
+        </form>
+        <ul id="categories-list" class="cat-list"></ul>
+      </div>
+
+      <!-- Data Management -->
+      <div class="form-card">
+        <h2 class="card-title">💾 Data Management</h2>
+        <p class="hint">Back up your data regularly. Restore from a previous backup file.</p>
+        <div class="data-btns">
+          <button class="btn-primary" onclick="handleBackup()">📥 Backup</button>
+          <button class="btn-outline" onclick="handleChooseFile()">📤 Restore</button>
+          <button class="btn-outline btn-danger" onclick="handleResetDemo()">🔄 Reset Demo</button>
+        </div>
+        <input type="file" id="restore-file" accept=".db" style="display:none" />
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Edit Book Modal ──────────────────────────────────────────────────── -->
+<div id="edit-book-modal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>Edit Book</h2>
+      <button class="modal-close" onclick="closeModal('edit-book-modal')">✕</button>
+    </div>
+    <form id="edit-book-form" autocomplete="off">
+      <input type="hidden" id="edit-book-id" />
+      <label>Title <span class="req">*</span></label>
+      <input type="text" id="edit-book-title" required />
+      <label>Author <span class="req">*</span></label>
+      <input type="text" id="edit-book-author" required />
+      <label>Category <span class="req">*</span></label>
+      <select id="edit-book-category" required>
+        <option value="">Select Category</option>
+      </select>
+      <div class="modal-actions">
+        <button type="button" class="btn-outline" onclick="closeModal('edit-book-modal')">Cancel</button>
+        <button type="submit" class="btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Edit Category Modal ──────────────────────────────────────────────── -->
+<div id="edit-category-modal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>Edit Category</h2>
+      <button class="modal-close" onclick="closeModal('edit-category-modal')">✕</button>
+    </div>
+    <form id="edit-category-form" autocomplete="off">
+      <input type="hidden" id="edit-category-id" />
+      <label>Category Name <span class="req">*</span></label>
+      <input type="text" id="edit-category-name-input" required />
+      <div class="modal-actions">
+        <button type="button" class="btn-outline" onclick="closeModal('edit-category-modal')">Cancel</button>
+        <button type="submit" class="btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Summary Modal ────────────────────────────────────────────────────── -->
+<div id="summary-modal" class="modal">
+  <div class="modal-box modal-wide">
+    <div class="modal-head">
+      <h2>Library Status</h2>
+      <button class="modal-close" onclick="closeModal('summary-modal')">✕</button>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Titles</span>
+        <span class="stat-val" id="stat-titles">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total Copies</span>
+        <span class="stat-val" id="stat-copies">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Active Loans</span>
+        <span class="stat-val" id="stat-active">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Returned</span>
+        <span class="stat-val" id="stat-returned">—</span>
+      </div>
+      <div class="stat-card stat-warn">
+        <span class="stat-label">Overdue</span>
+        <span class="stat-val" id="stat-overdue">—</span>
+      </div>
+    </div>
+    <div class="summary-sections">
+      <div>
+        <h3>Top 5 Borrowed</h3>
+        <ul id="top-books-list" class="summary-list"></ul>
+      </div>
+      <div>
+        <h3>Due Today</h3>
+        <ul id="due-today-list" class="summary-list"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ────────────────────────────────────────────────────────────── -->
+<div id="toast" class="toast"></div>
+
+<!-- ── Scripts ──────────────────────────────────────────────────────────── -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(r => console.log('[SW] registered:', r.scope))
+      .catch(e => console.log('[SW] failed:', e));
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+<script src="scripts/db-core.js"></script>
+<script src="scripts/db-library.js"></script>
+<script src="scripts/app.js"></script>
+<script src="scripts/notification.js"></script>
+
+</body>
+</html>
