@@ -1,70 +1,99 @@
 # 📚 Gnoke Library
 
-Track books, manage loans, and record returns — offline-first.
+Track books, manage loans, and record returns.
 
-Part of the **Gnoke Suite** by Edmund Sparrow.
+A professional, offline-first library management system.
 
 > **Portable. Private. Persistent.**
 
----
+------------------------------------------------------------------------
 
-## What It Does
+## 🚀 What It Does
 
-- Catalogue books with title, author, ISBN, category and copies
-- Record borrows with due dates; process returns
-- Full borrowing history with search and overdue highlighting
-- Library status dashboard (total copies, active loans, overdue, top books)
-- Demo data included — clear it with one tap when ready to go live
-- Backup & restore via `.db` file
+-   **Catalogue Books:** Track title, author, ISBN, category, and copy
+    counts\
+-   **Manage Loans:** Record borrows with due dates and process returns
+    instantly\
+-   **Smart Alerts:** Built-in notification system to flag overdue
+    books\
+-   **Library Dashboard:** Insights into active loans, returned books,
+    and top borrowed titles\
+-   **Works Completely Offline:** No account, no server, no ads
 
----
+------------------------------------------------------------------------
 
-## Get Started
+## ▶️ Get Started
 
-```bash
+Open the app in any modern browser.
+
+👉 **Open Live Demo:**\
+https://edmundsparrow.github.io/gnoke-library
+
+------------------------------------------------------------------------
+
+### Or run locally:
+
+``` bash
 git clone https://github.com/edmundsparrow/gnoke-library.git
 cd gnoke-library
 python -m http.server 8080
 ```
 
-Then open: http://localhost:8080
+Then open:
 
-⚠ Always run through a local server — do not open HTML files directly.
+http://localhost:8080
 
----
+⚠ Do not open the HTML file directly --- always run it through a local
+server.
 
-## Privacy
+------------------------------------------------------------------------
 
-Everything stays in your browser (IndexedDB). No server. No tracking. No ads.
+## 🔐 Privacy
 
----
+Everything stays inside your browser (IndexedDB).
 
-## Tech Stack
+-   No data is sent to any server\
+-   No tracking\
+-   No ads
 
-- HTML / CSS / JavaScript
-- SQLite via sql.js (browser-based)
-- IndexedDB persistence
-- Offline-first PWA with Service Worker
+Use the built-in Backup feature to export your data as a `.db` file and
+keep your catalogue and borrowing history safe.
 
----
+------------------------------------------------------------------------
 
-## Migrating from Old Version
+## 🏫 Designed For Librarians
 
-The old version used LocalForage (JSON arrays). The new version uses SQLite.
-Your old data is safe — simply use the Restore feature with a JSON backup from
-the old app, or re-enter your catalogue. A migration utility can be added on request.
+Built specifically for:
 
----
+-   Reading rooms\
+-   Small libraries\
+-   Personal collections
 
-## License
+Designed for rapid entry, clear loan status visibility, and reliable
+offline operations.
 
-GNU General Public License v3.0 — see LICENSE for details.
+------------------------------------------------------------------------
 
----
+## 📦 Tech Stack
 
-## Author
+-   **Persistence:** SQLite (via sql.js) + IndexedDB\
+-   **Reliability:** Service Worker (offline-first PWA)\
+-   **Environment:** Pure HTML, CSS, and JavaScript
 
-**Edmund Sparrow**
-edmundsparrow@gmail.com
+------------------------------------------------------------------------
 
-© 2026 Edmund Sparrow — Gnoke Suite
+## 📜 License
+
+This project is licensed under the GNU General Public License v3.0.
+
+See the `LICENSE` file for full terms.
+
+------------------------------------------------------------------------
+
+## 👨‍💻 Author
+
+**Edmund Sparrow**\
+edmundsparrow@gmail.com\
+WhatsApp
+
+© 2026 Edmund Sparrow --- Gnoke Suite
