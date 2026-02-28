@@ -83,6 +83,7 @@ function loadPage(pageId) {
     case 'history-page': renderHistory(); break;
     case 'return-page':  renderReturnForm(); break;
     case 'config-page':  renderConfig(); break;
+    case 'about-page':   renderAbout(); break;
   }
 }
 
@@ -598,3 +599,60 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('theme-toggle');
   if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
 });
+
+// ── About Page ─────────────────────────────────────────────────────────────
+
+function renderAbout() {
+  // Tech stack table
+  const techTable = document.getElementById('about-tech-table');
+  if (techTable) {
+    const rows = [
+      ['Engine',      'SQLite via sql.js (WebAssembly)'],
+      ['Persistence', 'IndexedDB'],
+      ['Offline',     'Service Worker PWA'],
+      ['Frontend',    'HTML · CSS · Vanilla JS'],
+      ['Typography',  'DM Sans · DM Mono · Playfair Display'],
+      ['Version',     'v2.0'],
+    ];
+    techTable.innerHTML = rows.map(([label, val]) => `
+      <tr>
+        <td style="padding:7px 0;font-size:0.75rem;color:var(--muted);
+                   font-family:var(--font-mono);width:40%;border-bottom:1px solid var(--border-color)">
+          ${label}
+        </td>
+        <td style="padding:7px 0 7px 10px;font-size:0.82rem;
+                   border-bottom:1px solid var(--border-color)">
+          ${val}
+        </td>
+      </tr>`).join('');
+  }
+
+  // Live stats snapshot
+  const statsTable = document.getElementById('about-stats-table');
+  if (statsTable) {
+    try {
+      const s = DBLib.getStats();
+      const rows = [
+        ['Titles',       s.totalTitles],
+        ['Total Copies', s.totalCopies],
+        ['Active Loans', s.activeLoans],
+        ['Returned',     s.returnedLoans],
+        ['Overdue',      s.overdueCount],
+      ];
+      statsTable.innerHTML = rows.map(([label, val]) => `
+        <tr>
+          <td style="padding:7px 0;font-size:0.75rem;color:var(--muted);
+                     font-family:var(--font-mono);width:50%;border-bottom:1px solid var(--border-color)">
+            ${label}
+          </td>
+          <td style="padding:7px 0 7px 10px;font-size:0.88rem;font-weight:600;
+                     border-bottom:1px solid var(--border-color)">
+            ${val}
+          </td>
+        </tr>`).join('');
+    } catch (e) {
+      statsTable.innerHTML = '<tr><td colspan="2" style="color:var(--muted);font-size:0.8rem;padding:8px 0">Stats unavailable</td></tr>';
+    }
+  }
+}
+
