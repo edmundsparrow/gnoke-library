@@ -3,7 +3,7 @@
  * Copyright (C) 2026 Edmund Sparrow — GNU GPL v3
  */
 
-const CACHE = 'gnoke-library-v2.2';
+const CACHE = 'gnoke-library-v2.01';
 
 const ASSETS = [
   '/',

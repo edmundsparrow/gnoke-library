@@ -95,6 +95,7 @@ See the `LICENSE` file for full terms.
 **Edmund Sparrow**\
 edmundsparrow@gmail.com\
 
-**WhatsApp:** [Chat on WhatsApp](https://wa.me/2349024054758)
+**Whatsapp:**
+https://wa.me/09024054758
 
 © 2026 Edmund Sparrow --- Gnoke Suite

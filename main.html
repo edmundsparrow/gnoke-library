@@ -61,6 +61,9 @@
   <button class="nav-btn" data-page="config-page">
     <span class="nav-icon">⚙️</span> Config
   </button>
+  <button class="nav-btn" data-page="about-page">
+    <span class="nav-icon">ℹ️</span> About
+  </button>
 </nav>
 
 <!-- ── Desktop Tab Bar ─────────────────────────────────────────────────── -->
@@ -69,6 +72,7 @@
   <button class="tab-btn" data-page="history-page">📋 History</button>
   <button class="tab-btn" data-page="return-page">↩️ Returns</button>
   <button class="tab-btn" data-page="config-page">⚙️ Config</button>
+  <button class="tab-btn" data-page="about-page">ℹ️ About</button>
 </div>
 
 <!-- ── Page Container ──────────────────────────────────────────────────── -->
@@ -253,6 +257,75 @@
           <button class="btn-outline btn-danger" onclick="handleResetDemo()">🔄 Reset Demo</button>
         </div>
         <input type="file" id="restore-file" accept=".db" style="display:none" />
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ABOUT -->
+  <section id="about-page" class="page">
+    <div class="page-header">
+      <div>
+        <h1>About</h1>
+        <p class="sub">Gnoke Library · v2.0</p>
+      </div>
+    </div>
+
+    <div class="config-grid">
+
+      <!-- App info -->
+      <div class="form-card">
+        <h2 class="card-title">📚 Gnoke Library</h2>
+        <p class="hint" style="margin-bottom:0;line-height:1.8">
+          An offline-first library management system for reading rooms,
+          small libraries and personal collections.<br><br>
+          Track books, manage loans, record returns and get alerts for
+          overdue titles — all without an account or internet connection.
+          Your data never leaves your device.
+        </p>
+      </div>
+
+      <!-- Tech -->
+      <div class="form-card">
+        <h2 class="card-title">⚙️ Under The Hood</h2>
+        <table style="width:100%;border-collapse:collapse">
+          <tbody id="about-tech-table"></tbody>
+        </table>
+      </div>
+
+      <!-- Stats snapshot -->
+      <div class="form-card">
+        <h2 class="card-title">📊 Library Snapshot</h2>
+        <table style="width:100%;border-collapse:collapse">
+          <tbody id="about-stats-table"></tbody>
+        </table>
+      </div>
+
+      <!-- Author & contact -->
+      <div class="form-card">
+        <h2 class="card-title">👤 Author</h2>
+        <p class="hint"><strong>Edmund Sparrow</strong><br>Part of the Gnoke Suite of offline-first web tools.</p>
+        <div class="data-btns" style="margin-top:12px">
+          <a class="btn-outline" href="mailto:edmundsparrow@gmail.com" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">✉ Email</a>
+          <a class="btn-outline" href="https://wa.me/09024054758" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 WhatsApp</a>
+          <a class="btn-outline" href="https://github.com/edmundsparrow/gnoke-library" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">⌥ GitHub</a>
+        </div>
+      </div>
+
+      <!-- License -->
+      <div class="form-card">
+        <h2 class="card-title">📜 License</h2>
+        <p class="hint">
+          This software is free and open source, licensed under the
+          <strong>GNU General Public License v3.0</strong>.<br><br>
+          You are free to use, modify and distribute it — but any
+          distributed version must also be open source under GPL v3.
+          Commercial use requires explicit permission from the author.
+        </p>
+        <p class="hint" style="margin-top:10px;font-family:var(--font-mono);font-size:0.68rem;color:var(--muted)">
+          © 2026 Edmund Sparrow — Gnoke Suite
+        </p>
       </div>
 
     </div>
